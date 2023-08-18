@@ -12,6 +12,14 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+- task: UseAzureCLI@2
+  inputs:
+    azureSubscription: 'azure-service-connection'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: 'az login'
+  displayName: 'Azure CLI Login'
+
 - script: |
     terraform init
     terraform plan -out=tfplan
