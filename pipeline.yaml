@@ -1,0 +1,27 @@
+trigger:
+  branches:
+    include:
+      - master
+
+pr:
+  branches:
+    include:
+      - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- script: |
+    terraform init
+    terraform plan -out=tfplan
+  displayName: 'Terraform Init and Plan'
+
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'azure-service-connection'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      terraform apply -auto-approve tfplan
+  displayName: 'Terraform Apply'
